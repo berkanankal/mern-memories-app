@@ -1,13 +1,29 @@
-import React from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addPost } from "./redux/postsSlice";
+import { addPost, fetchUsers } from "./redux/postsSlice";
 
 const App = () => {
   const { posts } = useSelector((state) => state.posts);
+  const dispatch = useDispatch();
 
-  console.log(posts);
+  console.log(posts.data);
 
-  return <div>Hello World!</div>;
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  return (
+    <div>
+      Hello World!
+      <button
+        onClick={() =>
+          dispatch(addPost({ title: "deneme", message: "deneme" }))
+        }
+      >
+        Ekle
+      </button>
+    </div>
+  );
 };
 
 export default App;
