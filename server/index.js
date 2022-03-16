@@ -14,7 +14,6 @@ app.use(cors());
 app.use("/posts", posts);
 app.use(customErrorHandler);
 
-
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() =>
