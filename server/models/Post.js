@@ -11,9 +11,11 @@ const PostSchema = new Schema({
     type: String,
     required: [true, "Message is required"],
   },
-  creator: String,
+  creator: {
+    type: String,
+    required: [true, "Creator is required"],
+  },
   tags: [String],
-  selectedFile: String,
   likeCount: {
     type: Number,
     default: 0,

@@ -7,10 +7,13 @@ import Post from "./Post/Post";
 import useStyles from "./styles";
 
 const Posts = () => {
-  const { posts, status } = useSelector((state) => state.posts);
+  const { posts } = useSelector((state) => state.posts);
+  const { status } = useSelector((state) => state.posts.fetchPosts);
   const classes = useStyles();
 
   const dispatch = useDispatch();
+
+  console.log(posts);
 
   useEffect(() => {
     if (status === "idle") {
