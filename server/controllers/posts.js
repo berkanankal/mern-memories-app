@@ -21,6 +21,20 @@ const addPost = asyncHandler(async (req, res, next) => {
   });
 });
 
+const updatePost = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const data = req.body;
+
+  const post = await Post.findByIdAndUpdate(id, data, {
+    new: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    data: post,
+  });
+});
+
 const deleteAll = asyncHandler(async (req, res, next) => {
   await Post.deleteMany();
 
@@ -30,4 +44,4 @@ const deleteAll = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { getAllPosts, addPost, deleteAll };
+module.exports = { getAllPosts, addPost, updatePost, deleteAll };

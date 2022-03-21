@@ -1,10 +1,19 @@
 const express = require("express");
-const { getAllPosts, addPost, deleteAll } = require("../controllers/posts");
+const {
+  getAllPosts,
+  addPost,
+  updatePost,
+  deleteAll,
+} = require("../controllers/posts");
+const {
+  checkPostExists,
+} = require("../middlewares/database/databaseErrorHelpers");
 
 const router = express.Router();
 
 router.get("/", getAllPosts);
 router.post("/", addPost);
+router.put("/:id", checkPostExists, updatePost);
 router.delete("/", deleteAll);
 
 module.exports = router;

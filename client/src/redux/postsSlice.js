@@ -5,14 +5,26 @@ export const fetchPosts = createAsyncThunk("posts/getAllPosts", () => {
   return axios.get("http://localhost:5013/posts").then((res) => res.data);
 });
 
-export const addPost = createAsyncThunk("posts/addPost", (newMovie) => {
+export const addPost = createAsyncThunk("posts/addPost", (newPost) => {
   return axios
-    .post("http://localhost:5013/posts", newMovie)
+    .post("http://localhost:5013/posts", newPost)
     .then((res) => {
       return res.data;
     })
     .catch((err) => err.response.data);
 });
+
+export const updatePost = createAsyncThunk(
+  "posts/updatePost",
+  (updatedPost) => {
+    return axios
+      .put(`http://localhost:5013/posts/${updatedPost._id}`, updatedPost)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => err.response.data);
+  }
+);
 
 export const postsSlice = createSlice({
   name: "posts",
@@ -31,12 +43,6 @@ export const postsSlice = createSlice({
   reducers: {
     setCurrentId: (state, action) => {
       state.currentId = action.payload;
-    },
-    updatePost: (state, action) => {
-      const index = state.posts.data.findIndex(
-        (post) => post._id === action.payload._id
-      );
-      state.posts.data[index] = action.payload;
     },
   },
   extraReducers: {
@@ -64,9 +70,15 @@ export const postsSlice = createSlice({
     [addPost.rejected]: (state, action) => {
       state.addPost.error = action.error.message;
     },
+    [updatePost.fulfilled]: (state, action) => {
+      const index = state.posts.data.findIndex(
+        (post) => post._id === action.payload.data._id
+      );
+      state.posts.data[index] = action.payload.data;
+    },
   },
 });
 
-export const { setCurrentId, updatePost } = postsSlice.actions;
+export const { setCurrentId } = postsSlice.actions;
 
 export default postsSlice.reducer;
