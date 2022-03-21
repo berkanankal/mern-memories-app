@@ -35,6 +35,15 @@ export const deletePost = createAsyncThunk("posts/deletePost", (id) => {
     .catch((err) => err.response.data);
 });
 
+export const likePost = createAsyncThunk("posts/likePost", (id) => {
+  return axios
+    .put(`http://localhost:5013/posts/${id}/like`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => err.response.data);
+});
+
 export const postsSlice = createSlice({
   name: "posts",
   initialState: {
@@ -88,6 +97,11 @@ export const postsSlice = createSlice({
       console.log(action.payload);
       state.posts.data = state.posts.data.filter(
         (post) => post._id !== action.payload.data._id
+      );
+    },
+    [likePost.fulfilled]: (state, action) => {
+      state.posts.data = state.posts.data.map((post) =>
+        post._id === action.payload.data._id ? action.payload.data : post
       );
     },
   },

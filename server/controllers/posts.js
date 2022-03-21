@@ -55,4 +55,25 @@ const deleteAll = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { getAllPosts, addPost, updatePost, deleteAll, deletePost };
+const likePost = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+
+  const post = await Post.findById(id);
+
+  post.likeCount += 1;
+  post.save();
+
+  res.status(200).json({
+    success: true,
+    data: post,
+  });
+});
+
+module.exports = {
+  getAllPosts,
+  addPost,
+  updatePost,
+  deletePost,
+  likePost,
+  deleteAll,
+};
