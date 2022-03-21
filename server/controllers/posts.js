@@ -35,6 +35,17 @@ const updatePost = asyncHandler(async (req, res, next) => {
   });
 });
 
+const deletePost = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+
+  const post = await Post.findByIdAndDelete(id);
+
+  return res.status(200).json({
+    success: true,
+    data: post,
+  });
+});
+
 const deleteAll = asyncHandler(async (req, res, next) => {
   await Post.deleteMany();
 
@@ -44,4 +55,4 @@ const deleteAll = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { getAllPosts, addPost, updatePost, deleteAll };
+module.exports = { getAllPosts, addPost, updatePost, deleteAll, deletePost };
