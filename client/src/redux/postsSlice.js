@@ -18,6 +18,7 @@ export const postsSlice = createSlice({
   name: "posts",
   initialState: {
     posts: [],
+    currentId: null,
     fetchPosts: {
       status: "idle",
       error: null,
@@ -27,7 +28,17 @@ export const postsSlice = createSlice({
       error: null,
     },
   },
-  reducers: {},
+  reducers: {
+    setCurrentId: (state, action) => {
+      state.currentId = action.payload;
+    },
+    updatePost: (state, action) => {
+      const index = state.posts.data.findIndex(
+        (post) => post._id === action.payload._id
+      );
+      state.posts.data[index] = action.payload;
+    },
+  },
   extraReducers: {
     [fetchPosts.pending]: (state) => {
       state.fetchPosts.status = "loading";
@@ -55,5 +66,7 @@ export const postsSlice = createSlice({
     },
   },
 });
+
+export const { setCurrentId, updatePost } = postsSlice.actions;
 
 export default postsSlice.reducer;

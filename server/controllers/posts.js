@@ -21,4 +21,13 @@ const addPost = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { getAllPosts, addPost };
+const deleteAll = asyncHandler(async (req, res, next) => {
+  await Post.deleteMany();
+
+  res.status(200).json({
+    success: true,
+    message: "Delete all",
+  });
+});
+
+module.exports = { getAllPosts, addPost, deleteAll };

@@ -21,7 +21,6 @@ const Posts = () => {
     }
   }, [dispatch, status]);
 
-  console.log(posts);
   console.log(status);
 
   return (
@@ -35,7 +34,7 @@ const Posts = () => {
           spacing={3}
         >
           {posts.data.map((post) => (
-            <Grid item xs={12} sm={6} md={6}>
+            <Grid key={post._id} item xs={12} sm={6} md={6}>
               <Post post={post} />
             </Grid>
           ))}

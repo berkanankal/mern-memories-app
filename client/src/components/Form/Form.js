@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
 import FileBase from "react-file-base64";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import { addPost } from "../../redux/postsSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentId, updatePost } from "../../redux/postsSlice";
 
 const Form = () => {
+  const classes = useStyles();
   const dispatch = useDispatch();
 
   const [newPost, setNewPost] = useState({
@@ -14,7 +16,17 @@ const Form = () => {
     creator: "",
     tags: [],
   });
-  const classes = useStyles();
+
+  const currentId = useSelector((state) => state.posts.currentId);
+  const post = useSelector((state) =>
+    currentId
+      ? state.posts.posts.data.find((post) => post._id === currentId)
+      : null
+  );
+
+  useEffect(() => {
+    if (post) setNewPost(post);
+  }, [post]);
 
   const onInputChange = (e) => {
     setNewPost({ ...newPost, [e.target.name]: e.target.value });
@@ -27,6 +39,7 @@ const Form = () => {
       creator: "",
       tags: [],
     });
+    dispatch(setCurrentId(null));
   };
 
   const handleSubmit = (e) => {
@@ -40,9 +53,11 @@ const Form = () => {
       return;
     }
 
-    console.log(newPost);
-
-    dispatch(addPost(newPost));
+    if (currentId) {
+      dispatch(updatePost(newPost));
+    } else {
+      dispatch(addPost(newPost));
+    }
 
     clearInputs();
   };
@@ -55,7 +70,9 @@ const Form = () => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">`Editing ""` "Creating a Memory"</Typography>
+        <Typography variant="h6">
+          {currentId ? "Editing" : "Creating"} a Memory
+        </Typography>
         <TextField
           name="creator"
           variant="outlined"
