@@ -16,9 +16,9 @@ export const addPost = createAsyncThunk("posts/addPost", (newPost) => {
 
 export const updatePost = createAsyncThunk(
   "posts/updatePost",
-  (updatedPost) => {
+  ({ currentId, formData }) => {
     return axios
-      .put(`http://localhost:5013/posts/${updatedPost._id}`, updatedPost)
+      .put(`http://localhost:5013/posts/${currentId}`, formData)
       .then((res) => {
         return res.data;
       })
@@ -89,12 +89,12 @@ export const postsSlice = createSlice({
       state.addPost.error = action.error.message;
     },
     [updatePost.fulfilled]: (state, action) => {
+      console.log(action.payload);
       state.posts.data = state.posts.data.map((post) =>
         post._id === action.payload.data._id ? action.payload.data : post
       );
     },
     [deletePost.fulfilled]: (state, action) => {
-      console.log(action.payload);
       state.posts.data = state.posts.data.filter(
         (post) => post._id !== action.payload.data._id
       );

@@ -23,10 +23,7 @@ const Post = ({ post }) => {
     <Card className={classes.card}>
       <CardMedia
         className={classes.media}
-        image={
-          post.selectedFile ||
-          "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"
-        }
+        image={`http://localhost:5013/uploads/${post.photo}`}
         title={post.title}
       />
       <div className={classes.overlay}>
@@ -41,12 +38,12 @@ const Post = ({ post }) => {
           size="small"
           onClick={() => dispatch(setCurrentId(post._id))}
         >
-          <MoreHorizIcon fontSize="default" />
+          <MoreHorizIcon fontSize="medium" />
         </Button>
       </div>
       <div className={classes.details}>
         <Typography variant="body2" color="textSecondary" component="h2">
-          {post.tags.map((tag) => `#${tag},`)}
+          {post.tags.map((tag) => `#${tag} `)}
         </Typography>
       </div>
       <Typography

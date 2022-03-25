@@ -1,5 +1,7 @@
 const Post = require("../models/Post");
 const asyncHandler = require("express-async-handler");
+const fs = require("fs");
+const path = require("path");
 
 const getAllPosts = asyncHandler(async (req, res, next) => {
   const posts = await Post.find();
@@ -13,7 +15,13 @@ const getAllPosts = asyncHandler(async (req, res, next) => {
 const addPost = asyncHandler(async (req, res, next) => {
   const data = req.body;
 
-  const post = await Post.create(data);
+  let post;
+
+  if (req.file) {
+    post = await Post.create({ ...data, photo: req.file.filename });
+  } else {
+    post = await Post.create(data);
+  }
 
   res.status(201).json({
     success: true,
@@ -24,6 +32,15 @@ const addPost = asyncHandler(async (req, res, next) => {
 const updatePost = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const data = req.body;
+
+  if (req.file) {
+    data.photo = req.file.filename;
+    const oldPhoto = await Post.findById(id);
+    if (oldPhoto.photo !== "default.png") {
+      const rootDir = path.dirname(require.main.filename);
+      fs.unlinkSync(path.join(rootDir, "/public/uploads", oldPhoto.photo));
+    }
+  }
 
   const post = await Post.findByIdAndUpdate(id, data, {
     new: true,
@@ -46,15 +63,6 @@ const deletePost = asyncHandler(async (req, res, next) => {
   });
 });
 
-const deleteAll = asyncHandler(async (req, res, next) => {
-  await Post.deleteMany();
-
-  res.status(200).json({
-    success: true,
-    message: "Delete all",
-  });
-});
-
 const likePost = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
@@ -66,6 +74,15 @@ const likePost = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: post,
+  });
+});
+
+const deleteAll = asyncHandler(async (req, res, next) => {
+  await Post.deleteMany();
+
+  res.status(200).json({
+    success: true,
+    message: "Delete all",
   });
 });
 

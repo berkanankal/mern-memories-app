@@ -10,12 +10,13 @@ const {
 const {
   checkPostExists,
 } = require("../middlewares/database/databaseErrorHelpers");
+const upload = require("../helpers/libraries/multer");
 
 const router = express.Router();
 
 router.get("/", getAllPosts);
-router.post("/", addPost);
-router.put("/:id", checkPostExists, updatePost);
+router.post("/", upload.single("photo"), addPost);
+router.put("/:id", [checkPostExists, upload.single("photo")], updatePost);
 router.delete("/:id", checkPostExists, deletePost);
 router.put("/:id/like", checkPostExists, likePost);
 router.delete("/", deleteAll);

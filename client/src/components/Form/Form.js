@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useStyles from "./styles";
-import FileBase from "react-file-base64";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import { addPost } from "../../redux/postsSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +13,7 @@ const Form = () => {
     title: "",
     message: "",
     creator: "",
+    photo: "default.png",
     tags: [],
   });
 
@@ -32,11 +32,16 @@ const Form = () => {
     setNewPost({ ...newPost, [e.target.name]: e.target.value });
   };
 
+  const handlePhoto = (e) => {
+    setNewPost({ ...newPost, photo: e.target.files[0] });
+  };
+
   const clearInputs = () => {
     setNewPost({
       title: "",
       message: "",
       creator: "",
+      photo: "",
       tags: [],
     });
     dispatch(setCurrentId(null));
@@ -53,10 +58,17 @@ const Form = () => {
       return;
     }
 
+    const formData = new FormData();
+    formData.append("title", newPost.title);
+    formData.append("message", newPost.message);
+    formData.append("creator", newPost.creator);
+    formData.append("tags", newPost.tags);
+    formData.append("photo", newPost.photo);
+
     if (currentId) {
-      dispatch(updatePost(newPost));
+      dispatch(updatePost({ currentId, formData }));
     } else {
-      dispatch(addPost(newPost));
+      dispatch(addPost(formData));
     }
 
     clearInputs();
@@ -106,12 +118,12 @@ const Form = () => {
           fullWidth
           value={newPost.tags}
           onChange={(e) =>
-            setNewPost({
-              ...newPost,
-              tags: [...e.target.value.split(",")],
-            })
+            setNewPost({ ...newPost, tags: e.target.value.trim().split(",") })
           }
         />
+        <div className={classes.fileInput}>
+          <input type="file" onChange={handlePhoto} />
+        </div>
         <Button
           className={classes.buttonSubmit}
           variant="contained"
@@ -123,6 +135,7 @@ const Form = () => {
           Submit
         </Button>
         <Button
+          style={{ marginTop: "10px" }}
           variant="contained"
           color="secondary"
           size="small"

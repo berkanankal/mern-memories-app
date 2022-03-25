@@ -20,6 +20,10 @@ const PostSchema = new Schema({
     type: Number,
     default: 0,
   },
+  photo: {
+    type: String,
+    default: "default.png",
+  },
   createdAt: {
     type: Date,
     default: Date.now,
