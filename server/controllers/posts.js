@@ -15,13 +15,11 @@ const getAllPosts = asyncHandler(async (req, res, next) => {
 const addPost = asyncHandler(async (req, res, next) => {
   const data = req.body;
 
-  let post;
-
   if (req.file) {
-    post = await Post.create({ ...data, photo: req.file.filename });
-  } else {
-    post = await Post.create(data);
+    data.photo = req.file.filename;
   }
+
+  const post = await Post.create(data);
 
   res.status(201).json({
     success: true,

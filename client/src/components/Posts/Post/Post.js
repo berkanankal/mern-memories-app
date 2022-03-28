@@ -19,6 +19,12 @@ const Post = ({ post }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      dispatch(deletePost(post._id));
+    }
+  };
+
   return (
     <Card className={classes.card}>
       <CardMedia
@@ -67,11 +73,7 @@ const Post = ({ post }) => {
         >
           <ThumbUpAltIcon fontSize="small" /> Like {post.likeCount}{" "}
         </Button>
-        <Button
-          size="small"
-          color="primary"
-          onClick={() => dispatch(deletePost(post._id))}
-        >
+        <Button size="small" color="primary" onClick={handleDelete}>
           <DeleteIcon fontSize="small" /> Delete
         </Button>
       </CardActions>

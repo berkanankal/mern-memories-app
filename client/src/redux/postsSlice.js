@@ -89,7 +89,6 @@ export const postsSlice = createSlice({
       state.addPost.error = action.error.message;
     },
     [updatePost.fulfilled]: (state, action) => {
-      console.log(action.payload);
       state.posts.data = state.posts.data.map((post) =>
         post._id === action.payload.data._id ? action.payload.data : post
       );

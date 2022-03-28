@@ -13,15 +13,11 @@ const Posts = () => {
 
   const dispatch = useDispatch();
 
-  console.log(posts);
-
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchPosts());
     }
   }, [dispatch, status]);
-
-  console.log(status);
 
   return (
     <div>

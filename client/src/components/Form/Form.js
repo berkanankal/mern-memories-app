@@ -62,7 +62,10 @@ const Form = () => {
     formData.append("title", newPost.title);
     formData.append("message", newPost.message);
     formData.append("creator", newPost.creator);
-    formData.append("tags", newPost.tags);
+    var array = newPost.tags;
+    for (var i = 0; i < array.length; i++) {
+      formData.append("tags[]",array[i]);
+    }
     formData.append("photo", newPost.photo);
 
     if (currentId) {
